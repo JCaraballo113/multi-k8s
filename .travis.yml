@@ -1,0 +1,17 @@
+language: generic
+services:
+  - docker
+before_install:
+  - docker build -t jcaraballo/react-test -f ./client/Dockerfile.dev ./client
+script:
+  - docker run -e CI=true jcaraballo/react-test npm test
+after_success:
+  - docker build -t jcaraballo/multi-client ./client
+  - docker build -t jcaraballo/multi-nginx ./nginx
+  - docker build -t jcaraballo/multi-server ./server
+  - docker build -t jcaraballo/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push jcaraballo/multi-client
+  - docker push jcaraballo/multi-nginx
+  - docker push jcaraballo/multi-server
+  - docker push jcaraballo/multi-worker
