@@ -14,3 +14,14 @@ after_success:
   - docker push jcaraballo/multi-nginx
   - docker push jcaraballo/multi-server
   - docker push jcaraballo/multi-worker
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: multi-docker
+  env: MultiDocker-env
+  bucket_name: aws-bucket-name
+  bucket_path: aws-bucket-path
+  on: 
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
