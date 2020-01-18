@@ -1,0 +1,12 @@
+services:
+  - docker
+before_install:
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json
+  # GCloud Kubernetes Engine config goes here but we're billed so no since this is for learning :)
+  - echo $("DOCKER_PASSWORD") | docker login -u  "$DOCKER_USERNAME" --password-stdin
+  - docker build -t jcaraballo/react-test -f ./client/Dockerfile.dev .
+script:
+  - docker run jcaraballo/react-test yarn test 
